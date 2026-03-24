@@ -1,23 +1,55 @@
-version: '3.9'
+version: "3.9"
 
 services:
-  web:
-    build: .
+
+  backend:
+    build: ./backend
+    container_name: backend
     command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - ./backend:/app
     ports:
       - "8000:8000"
     depends_on:
       - db
       - redis
 
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
   db:
     image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_DB: url_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
 
   redis:
     image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
 
   celery:
-    build: .
+    build: ./backend
+    container_name: celery
     command: celery -A config worker -l info
     depends_on:
+      - backend
+      - redis
+
+  celery-beat:
+    build: ./backend
+    container_name: celery-beat
+    command: celery -A config beat -l info
+    depends_on:
+      - backend
       - redis

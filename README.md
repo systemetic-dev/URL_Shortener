@@ -4,4 +4,4 @@ It is platform where user make its url short
   I use Base62 to make short Url
   I use Django in back-end 
   I use react.js in frontend 
- 
+  I use postgreSQL in Databases 

@@ -6,4 +6,5 @@ It is platform where user make its url short
  • I use Django in back-end
  • I use react.js in frontend 
  • I use postgreSQL in Databases 
+ • I use redis for catching
 ```
